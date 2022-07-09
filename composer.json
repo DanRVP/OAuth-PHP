@@ -1,0 +1,19 @@
+{
+    "name": "dan-rogers/oauth-php",
+    "description": "Lib for OAuth 1 and OAuth 2 workflows.",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Dan Rogers",
+            "email": "dan.rogers@shiptheory.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+          "OAuth\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "license": "MIT"
+}
