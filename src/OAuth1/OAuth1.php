@@ -51,7 +51,7 @@ class OAuth1
     public function generateAuthorization(string $url, string $method, array $extra_params = [])
     {
         $oauth_params = array_filter($this->config->getConfigParams(), function($value, $key) {
-            return !in_array($key, ['consumer_secret', 'token_secret']) && !empty($value);
+            return !in_array($key, ['consumer_secret', 'token_secret', 'realm']) && !empty($value);
         }, ARRAY_FILTER_USE_BOTH);
 
         $request_params = array_merge($oauth_params, $extra_params);
@@ -71,7 +71,7 @@ class OAuth1
      */
     private function buildOAuthHeader(array $params)
     {
-        $header = 'OAuth ';
+        $header = 'OAuth realm=' . $this->config->getRealm();
         foreach ($params as $key => $value) {
             $header_element = $key . '="' . rawurlencode($value) . '", ';
             $header .= $header_element;
