@@ -12,43 +12,43 @@ class OAuth1Config
      * @var string
      * OAuth callback URL.
      */
-    protected $callback_url;
+    protected $callback_url = '';
 
     /**
      * @var string
      * OAuth consumer key.
      */
-    protected $consumer_key;
+    protected $consumer_key = '';
 
     /**
      * @var string
      * OAuth consumer secret.
      */
-    protected $consumer_secret;
+    protected $consumer_secret = '';
 
     /**
      * @var string
      * OAuth realm.
      */
-    protected $realm;
+    protected $realm = '';
 
     /**
      * @var string
      * OAuth access token.
      */
-    protected $access_token;
+    protected $access_token = '';
 
     /**
      * @var string
      * OAuth token secret.
      */
-    protected $token_secret;
+    protected $token_secret = '';
 
     /**
      * @var string
      * OAuth verifier.
      */
-    protected $verifier;
+    protected $verifier = '';
 
     /**
      * @param array $oauth_params Associative array of parameters to be set. 

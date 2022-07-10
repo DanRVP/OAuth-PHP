@@ -41,10 +41,7 @@ class OAuth1
      */
     public function __construct(OAuth1Config $config)
     {
-        if ($config instanceof OAuth1Config) {
-            $this->consumer_secret = $config->getConsumerSecret();
-            $this->token_secret = null;
-        } else {
+        if (!($config instanceof OAuth1Config)) {
             throw new OAuthException('The config object must be an instance of OAuth1Config');
         }
 
@@ -118,7 +115,8 @@ class OAuth1
     private function buildOauthSignature(string $url, array $params, string $method)
     {
         $base_string = $this->buildBaseString($method, $url, $params);
-        $key = rawurlencode($this->consumer_secret) . '&' . rawurlencode($this->token_secret);
+        $key = rawurlencode($this->config->consumer_secret) 
+            . '&' . rawurlencode($this->config->token_secret);
         $signature = base64_encode(hash_hmac('sha1', $base_string, $key, true));
 
         return $signature;
