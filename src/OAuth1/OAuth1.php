@@ -50,7 +50,7 @@ class OAuth1
      */
     public function generateAuthorization(string $url, string $method, array $extra_params = [])
     {
-        $oauth_params = $this->config->getConfigParams();
+        $oauth_params = array_filter($this->config->getConfigParams());
         $request_params = array_merge($oauth_params, $extra_params);
         $request_params['signature'] = $this->buildOauthSignature($url, $oauth_params, $method);
 

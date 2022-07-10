@@ -65,13 +65,13 @@ class OAuth1Config
     }
 
     /**
-     * Retrieve all set configuration properties.
+     * Retrieve all configuration properties in an array.
      * 
      * @return array
      */
     public function getConfigParams()
     {
-        return array_filter(get_object_vars($this));
+        return get_object_vars($this);
     }
 
     /////////////////////////////////
