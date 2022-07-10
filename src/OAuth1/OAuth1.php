@@ -52,10 +52,7 @@ class OAuth1
     {
         $oauth_params = array_filter($this->config->getConfigParams());
         $request_params = array_merge($oauth_params, $extra_params);
-        $request_params['oauth_signature_method'] = 'HMAC-SHA1';
-        $request_params['oauth_timestamp'] = OAuthHelper::getTimestamp();
-        $request_params['oauth_nonce'] = OAuthHelper::getTimestamp();
-        $request_params['oauth_signature'] = $this->buildOauthSignature($url, $oauth_params, $method);
+        $request_params['signature'] = $this->buildOauthSignature($url, $oauth_params, $method);
 
         return $this->buildOAuthHeader($request_params);
     }
