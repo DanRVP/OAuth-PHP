@@ -12,13 +12,13 @@ class OAuth1Config
      * @var string
      * OAuth callback URL.
      */
-    protected $callback_url = '';
+    protected $oauth_callback = '';
 
     /**
      * @var string
      * OAuth consumer key.
      */
-    protected $consumer_key = '';
+    protected $oauth_consumer_key = '';
 
     /**
      * @var string
@@ -36,7 +36,7 @@ class OAuth1Config
      * @var string
      * OAuth access token.
      */
-    protected $access_token = '';
+    protected $oauth_token = '';
 
     /**
      * @var string
@@ -48,11 +48,24 @@ class OAuth1Config
      * @var string
      * OAuth verifier.
      */
-    protected $verifier = '';
+    protected $oauth_verifier = '';
 
     /**
      * @param array $oauth_params Associative array of parameters to be set. 
      *              Acceptable params will be set while all others will be discarded.
+     * 
+     * ```
+     * // Valid params
+     * $params = [
+     *     'oauth_callback' => 'https://test.com/auth',
+     *     'oauth_consumer_key' => 'abc123',
+     *     'consumer_secret' => 'xyz567',
+     *     'realm' => 'Test',
+     *     'oauth_token' => 'abc123',
+     *     'token_secret' => 'xyz567',
+     *     'oauth_verifier' => 'XXXXXXXXXXXXX',
+     * ];
+     * ```
      */
     public function __construct(array $oauth_params)
     {
@@ -79,23 +92,23 @@ class OAuth1Config
     ///////////////////////////////
 
     /**
-     * Get the value of callback_url
+     * Get the value of oauth_callback
      *
      * @return  string
      */ 
-    public function getCallbackUrl()
+    public function getOAuthUrl()
     {
-        return $this->callback_url;
+        return $this->oauth_callback;
     }
 
     /**
-     * Set the value of callback_url
+     * Set the value of oauth_callback
      *
-     * @param string $callback_url
+     * @param string $oauth_callback
      */ 
-    public function setCallbackUrl(string $callback_url)
+    public function setOAuthUrl(string $oauth_callback)
     {
-        $this->callback_url = $callback_url;
+        $this->oauth_callback = $oauth_callback;
     }
 
     /**
@@ -103,19 +116,19 @@ class OAuth1Config
      *
      * @return  string
      */ 
-    public function getConsumerKey()
+    public function getOAuthConsumerKey()
     {
-        return $this->consumer_key;
+        return $this->oauth_consumer_key;
     }
 
     /**
-     * Set the value of consumer_key
+     * Set the value of oauth_consumer_key
      *
-     * @param string $consumer_key
+     * @param string $oauth_consumer_key
      */ 
-    public function setConsumerKey(string $consumer_key)
+    public function setOAuthConsumerKey(string $oauth_consumer_key)
     {
-        $this->consumer_key = $consumer_key;
+        $this->oauth_consumer_key = $oauth_consumer_key;
     }
 
     /**
@@ -163,19 +176,19 @@ class OAuth1Config
      *
      * @return string
      */ 
-    public function getAccessToken()
+    public function getOAuthToken()
     {
-        return $this->access_token;
+        return $this->oauth_token;
     }
 
     /**
      * Set OAuth Access token
      *
-     * @param string $access_token OAuth Access token
+     * @param string $oauth_token OAuth Access token
      */ 
-    public function setAccessToken(string $access_token)
+    public function setOAuthToken(string $oauth_token)
     {
-        $this->access_token = $access_token;
+        $this->oauth_token = $oauth_token;
     }
 
     /**
@@ -203,18 +216,18 @@ class OAuth1Config
      *
      * @return string
      */ 
-    public function getVerfier()
+    public function getOAuthVerfier()
     {
-        return $this->verifier;
+        return $this->oauth_verifier;
     }
 
     /**
      * Set OAuth verifier.
      *
-     * @param string $verifier OAuth verifier.
+     * @param string $oauth_verifier OAuth verifier.
      */ 
-    public function setVerfier(string $verifier)
+    public function setOAuthVerfier(string $oauth_verifier)
     {
-        $this->verifier = $verifier;
+        $this->oauth_verifier = $oauth_verifier;
     }
 }
