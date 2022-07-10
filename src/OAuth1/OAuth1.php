@@ -50,7 +50,10 @@ class OAuth1
      */
     public function generateAuthorization(string $url, string $method, array $extra_params = [])
     {
-        $oauth_params = array_filter($this->config->getConfigParams());
+        $oauth_params = array_filter($this->config->getConfigParams(), function($value, $key) {
+            return !in_array($key, ['consumer_secret', 'token_secret']) && !empty($value);
+        }, ARRAY_FILTER_USE_BOTH);
+        
         $request_params = array_merge($oauth_params, $extra_params);
         $request_params['oauth_signature_method'] = 'HMAC-SHA1';
         $request_params['oauth_timestamp'] = OAuthHelper::getTimestamp();
