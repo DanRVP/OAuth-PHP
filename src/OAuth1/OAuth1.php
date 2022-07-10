@@ -50,32 +50,11 @@ class OAuth1
      */
     public function generateAuthorization(string $url, string $method, array $extra_params = [])
     {
-        $oauth_params = [
-            'oauth_consumer_key' => $this->config->getConsumerKey(),
-            'oauth_signature_method' => 'HMAC-SHA1',
-            'oauth_timestamp' => OAuthHelper::getTimestamp(),
-            'oauth_nonce' => OAuthHelper::generateRandomString(20),
-            'oauth_callback' => $this->config->getCallbackUrl(),
-        ];
-
-        $realm = $this->config->getRealm();
-        if (!empty($realm)) {
-            $oauth_params['realm'] = $realm;
-        }
-
-        $verifier = $this->config->getVerfier();
-        if (!empty($verifier)) {
-            $oauth_params['oauth_verifier'] = $verifier;
-        }
-
-        if (!empty($extra_params)) {
-            $oauth_params = array_merge($oauth_params, $extra_params);
-        }
-
-        $request_params = $oauth_params;
+        $oauth_params = $this->config->getConfigParams();
+        $request_params = array_merge($oauth_params, $extra_params);
         $request_params['signature'] = $this->buildOauthSignature($url, $oauth_params, $method);
 
-        return $this->buildOAuthHeader($oauth_params);
+        return $this->buildOAuthHeader($request_params);
     }
 
     /**

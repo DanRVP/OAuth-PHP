@@ -64,6 +64,16 @@ class OAuth1Config
         }
     }
 
+    /**
+     * Retrieve all set configuration properties.
+     * 
+     * @return array
+     */
+    public function getConfigParams()
+    {
+        return array_filter(get_object_vars($this));
+    }
+
     /////////////////////////////////
     ////// Getters and Setters /////
     ///////////////////////////////
