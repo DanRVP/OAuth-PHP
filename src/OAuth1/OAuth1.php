@@ -71,7 +71,7 @@ class OAuth1
      */
     private function buildOAuthHeader(array $params)
     {
-        $header = 'OAuth realm=' . $this->config->getRealm();
+        $header = 'OAuth realm=' . $this->config->getRealm() . '", ';
         foreach ($params as $key => $value) {
             $header_element = $key . '="' . rawurlencode($value) . '", ';
             $header .= $header_element;
