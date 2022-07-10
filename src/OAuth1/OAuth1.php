@@ -18,33 +18,23 @@ class OAuth1
 
     /**
      * @var string 
+     * The generated base string. 
+     * Read-only for debugging.
      */
     protected $base_string;
     
     /**
      * @var string 
+     * The generated signature. 
+     * Read-only for debugging.
      */
     protected $signature;
-    
-    /**
-     * @var string 
-     */
-    protected $consumer_secret;
-    
-    /**
-     * @var string 
-     */
-    protected $token_secret;
 
     /**
      * @param OAuth1Config $config
      */
     public function __construct(OAuth1Config $config)
     {
-        if (!($config instanceof OAuth1Config)) {
-            throw new OAuthException('The config object must be an instance of OAuth1Config');
-        }
-
         $this->setConfig($config);
     }
 
@@ -173,7 +163,7 @@ class OAuth1
      *
      * @param OAuth1Config $config
      */ 
-    public function setConfig($config)
+    public function setConfig(OAuth1Config $config)
     {
         $this->config = $config;
     }
@@ -202,27 +192,5 @@ class OAuth1
     public function getSignature()
     {
         return $this->signature;
-    }
-
-    /**
-     * Get the value of consumer_secret.
-     * Best used for debugging.
-     *
-     * @return string
-     */ 
-    public function getConsumerSecret()
-    {
-        return $this->consumer_secret;
-    }
-
-    /**
-     * Get the value of token_secret.
-     * Best used for debugging.
-     *
-     * @return string
-     */ 
-    public function getTokenSecret()
-    {
-        return $this->token_secret;
     }
 }
