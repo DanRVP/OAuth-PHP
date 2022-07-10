@@ -84,8 +84,8 @@ class OAuth1
     private function buildOauthSignature(string $url, array $params, string $method)
     {
         $base_string = $this->buildBaseString($method, $url, $params);
-        $key = rawurlencode($this->config->consumer_secret) 
-            . '&' . rawurlencode($this->config->token_secret);
+        $key = rawurlencode($this->config->getConsumerSecret()) 
+            . '&' . rawurlencode($this->config->getTokenSecret());
         $signature = base64_encode(hash_hmac('sha1', $base_string, $key, true));
 
         return $signature;
