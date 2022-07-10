@@ -25,6 +25,16 @@ class OAuth1
      * @var string 
      */
     protected $signature;
+    
+    /**
+     * @var string 
+     */
+    protected $consumer_secret;
+    
+    /**
+     * @var string 
+     */
+    protected $token_secret;
 
     /**
      * @param OAuth1Config $config
@@ -32,7 +42,7 @@ class OAuth1
     public function __construct(OAuth1Config $config)
     {
         if ($config instanceof OAuth1Config) {
-            $this->client_secret = $config->getConsumerSecret();
+            $this->consumer_secret = $config->getConsumerSecret();
             $this->token_secret = null;
         } else {
             throw new OAuthException('The config object must be an instance of OAuth1Config');
@@ -171,7 +181,7 @@ class OAuth1
     }
 
     /////////////////////////////////
-    /////// Debugging Getters //////
+    /////// Read-only Getters //////
     ///////////////////////////////
 
     /**
@@ -194,5 +204,27 @@ class OAuth1
     public function getSignature()
     {
         return $this->signature;
+    }
+
+    /**
+     * Get the value of consumer_secret.
+     * Best used for debugging.
+     *
+     * @return string
+     */ 
+    public function getConsumerSecret()
+    {
+        return $this->consumer_secret;
+    }
+
+    /**
+     * Get the value of token_secret.
+     * Best used for debugging.
+     *
+     * @return string
+     */ 
+    public function getTokenSecret()
+    {
+        return $this->token_secret;
     }
 }
