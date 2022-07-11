@@ -71,7 +71,13 @@ class OAuth1
      */
     private function buildOAuthHeader(array $params)
     {
-        $header = 'OAuth realm=' . $this->config->getRealm() . '", ';
+        $header = 'OAuth ';
+        
+        $realm = $this->config->getRealm();
+        if (!empty($realm)) {
+            $header .= 'realm=' . $this->config->getRealm() . '", ';
+        }
+
         foreach ($params as $key => $value) {
             $header_element = $key . '="' . rawurlencode($value) . '", ';
             $header .= $header_element;
@@ -92,7 +98,9 @@ class OAuth1
         $base_string = $this->buildBaseString($method, $url, $params);
         $key = rawurlencode($this->config->getConsumerSecret()) 
             . '&' . rawurlencode($this->config->getTokenSecret());
-        $signature = base64_encode(hash_hmac('sha1', $base_string, $key, true));
+        
+        $method = OAuth1Config::VALID_SIGNATURE_METHODS[$this->config->getOauthSignatureMethod()];
+        $signature = base64_encode(hash_hmac($method, $base_string, $key, true));
 
         return $signature;
     }
