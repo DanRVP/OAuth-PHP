@@ -61,6 +61,7 @@ class OAuth1Config
     const VALID_SIGNATURE_METHODS = [
         'HMAC-SHA1' => 'sha1',
         'HMAC-SHA256' => 'sha256',
+        'HMAC-SHA512' => 'sha512',
     ];
 
     /**
