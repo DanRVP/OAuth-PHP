@@ -2,6 +2,8 @@
 
 namespace OAuth\OAuth1;
 
+use OAuth\Utils\OAuthException;
+
 /**
  * Config object for OAuth 1.0 requests. 
  * @author Dan Rogers
@@ -51,6 +53,17 @@ class OAuth1Config
     protected $oauth_verifier = '';
 
     /**
+     * @var string
+     * OAuth signature method.
+     */
+    protected $oauth_signature_method = 'HMAC-SHA1';
+
+    const VALID_SIGNATURE_METHODS = [
+        'HMAC-SHA1' => 'sha1',
+        'HMAC-SHA256' => 'sha256',
+    ];
+
+    /**
      * @param array $oauth_params Associative array of parameters to be set. 
      *              Acceptable params will be set while all others will be discarded.
      * 
@@ -64,15 +77,17 @@ class OAuth1Config
      *     'oauth_token' => 'abc123',
      *     'token_secret' => 'xyz567',
      *     'oauth_verifier' => 'XXXXXXXXXXXXX',
+     *     'oauth_signature_method' => 'HMAC-SHA1',
      * ];
      * ```
      */
     public function __construct(array $oauth_params)
     {
-        $valid_parameters = array_keys(get_object_vars($this));
+        $valid_parameters = array_keys($this->getConfigParams());
         foreach ($oauth_params as $key => $value) {
             if (in_array($key, $valid_parameters)) {
-                $this->$key = $value;
+                $setter_name = $this->getSetterName($key);
+                $this->$setter_name($value);
             }
         }
     }
@@ -87,6 +102,22 @@ class OAuth1Config
         return get_object_vars($this);
     }
 
+    /**
+     * Get the name of a setter for the property.
+     * 
+     * Property naming convention is `snake_case`. 
+     * Method naming convention is `set + PascalisedPropertyName` which in 
+     * effect makes it `camelCase`.
+     * 
+     * For example property `oauth_signature_method` becomes `setOauthSignature`.
+     */
+    private function getSetterName($property)
+    {
+        $parts = explode('_', $property);
+        $pascalised = array_map('ucfirst', $parts);
+        return 'set' . implode('', $pascalised);
+    }
+
     /////////////////////////////////
     ////// Getters and Setters /////
     ///////////////////////////////
@@ -96,7 +127,7 @@ class OAuth1Config
      *
      * @return  string
      */ 
-    public function getOAuthUrl()
+    public function getOauthCallback()
     {
         return $this->oauth_callback;
     }
@@ -106,7 +137,7 @@ class OAuth1Config
      *
      * @param string $oauth_callback
      */ 
-    public function setOAuthUrl(string $oauth_callback)
+    public function setOauthCallback(string $oauth_callback)
     {
         $this->oauth_callback = $oauth_callback;
     }
@@ -116,7 +147,7 @@ class OAuth1Config
      *
      * @return  string
      */ 
-    public function getOAuthConsumerKey()
+    public function getOauthConsumerKey()
     {
         return $this->oauth_consumer_key;
     }
@@ -126,7 +157,7 @@ class OAuth1Config
      *
      * @param string $oauth_consumer_key
      */ 
-    public function setOAuthConsumerKey(string $oauth_consumer_key)
+    public function setOauthConsumerKey(string $oauth_consumer_key)
     {
         $this->oauth_consumer_key = $oauth_consumer_key;
     }
@@ -176,7 +207,7 @@ class OAuth1Config
      *
      * @return string
      */ 
-    public function getOAuthToken()
+    public function getOauthToken()
     {
         return $this->oauth_token;
     }
@@ -186,7 +217,7 @@ class OAuth1Config
      *
      * @param string $oauth_token OAuth Access token
      */ 
-    public function setOAuthToken(string $oauth_token)
+    public function setOauthToken(string $oauth_token)
     {
         $this->oauth_token = $oauth_token;
     }
@@ -216,7 +247,7 @@ class OAuth1Config
      *
      * @return string
      */ 
-    public function getOAuthVerfier()
+    public function getOauthVerifier()
     {
         return $this->oauth_verifier;
     }
@@ -226,8 +257,34 @@ class OAuth1Config
      *
      * @param string $oauth_verifier OAuth verifier.
      */ 
-    public function setOAuthVerfier(string $oauth_verifier)
+    public function setOauthVerifier(string $oauth_verifier)
     {
         $this->oauth_verifier = $oauth_verifier;
+    }
+
+    /**
+     * Get OAuth signature method.
+     *
+     * @return string
+     */ 
+    public function getOauthSignatureMethod()
+    {
+        return $this->oauth_signature_method;
+    }
+
+    /**
+     * Set OAuth signature method.
+     *
+     * @param string $oauth_signature_method  OAuth signature method.
+     * @throws OAuthException
+     */ 
+    public function setOauthSignatureMethod(string $oauth_signature_method)
+    {
+        if (!in_array($oauth_signature_method, array_keys(self::VALID_SIGNATURE_METHODS))) {
+            $methods = implode(', ', array_keys(self::VALID_SIGNATURE_METHODS));
+            throw new OAuthException("Currently supported signature methods are: $methods.");
+        }
+
+        $this->oauth_signature_method = $oauth_signature_method;
     }
 }
