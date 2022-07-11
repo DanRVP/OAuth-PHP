@@ -50,10 +50,7 @@ class OAuth1
      */
     public function generateAuthorization(string $url, string $method, array $extra_params = [])
     {
-        $oauth_params = array_filter($this->config->getConfigParams(), function($value, $key) {
-            return !in_array($key, ['consumer_secret', 'token_secret', 'realm']) && !empty($value);
-        }, ARRAY_FILTER_USE_BOTH);
-
+        $oauth_params = $this->config->getHeaderParams();
         $request_params = array_merge($oauth_params, $extra_params);
         $request_params['oauth_timestamp'] = OAuthHelper::getTimestamp();
         $request_params['oauth_nonce'] = OAuthHelper::generateRandomString(20);

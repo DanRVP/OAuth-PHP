@@ -84,7 +84,7 @@ class OAuth1Config
      */
     public function __construct(array $oauth_params)
     {
-        $valid_parameters = array_keys($this->getConfigParams());
+        $valid_parameters = array_keys(get_object_vars($this));
         foreach ($oauth_params as $key => $value) {
             if (in_array($key, $valid_parameters)) {
                 $setter_name = $this->getSetterName($key);
@@ -94,13 +94,22 @@ class OAuth1Config
     }
 
     /**
-     * Retrieve all configuration properties in an array.
+     * Retrieve properties used in the header and signature.
      * 
      * @return array
      */
-    public function getConfigParams()
+    public function getHeaderParams()
     {
-        return get_object_vars($this);
+        $params = [
+            'oauth_callback' => $this->getOauthCallback(),
+            'oauth_consumer_key' => $this->getOauthConsumerKey(),
+            'oauth_token' => $this->getOauthToken(),
+            'oauth_verifier' => $this->getOauthVerifier(),
+            'oauth_signature_method' => $this->getOauthSignatureMethod(),
+        ];
+
+        // Remove empty fields
+        return array_filter($params);
     }
 
     /**
