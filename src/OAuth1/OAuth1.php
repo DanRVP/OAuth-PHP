@@ -2,14 +2,13 @@
 
 namespace OAuth\OAuth1;
 
-use OAuth\Utils\OAuthException;
 use OAuth\Utils\OAuthHelper;
 
 /**
  * Main class which handles OAuth 1.0 logic
  * @author Dan Rogers
  */
-class OAuth1 
+class OAuth1
 {
     /**
      * @var OAuth1Config
@@ -17,15 +16,15 @@ class OAuth1
     protected $config;
 
     /**
-     * @var string 
-     * The generated base string. 
+     * @var string
+     * The generated base string.
      * Read-only for debugging.
      */
     protected $base_string;
-    
+
     /**
-     * @var string 
-     * The generated signature. 
+     * @var string
+     * The generated signature.
      * Read-only for debugging.
      */
     protected $signature;
@@ -39,14 +38,14 @@ class OAuth1
     }
 
     /**
-     * Generate an OAuth 1.0 Authorization header string based on the current 
+     * Generate an OAuth 1.0 Authorization header string based on the current
      * config and any extra parameters specified by the user.
-     * 
+     *
      * @param string $url The URL to query.
      * @param string $method The HTTP method being used.
-     * @param array $extra_params Any extra parameters to be included in the 
-     *              request. These should only be included if they are part 
-     *              of any x-www-form-urlencoded data in the request. 
+     * @param array $extra_params Any extra parameters to be included in the
+     *              request. These should only be included if they are part
+     *              of any x-www-form-urlencoded data in the request.
      */
     public function generateAuthorization(string $url, string $method, array $extra_params = [])
     {
@@ -68,7 +67,7 @@ class OAuth1
     private function buildOAuthHeader(array $params)
     {
         $header = 'OAuth ';
-        
+
         $realm = $this->config->getRealm();
         if (!empty($realm)) {
             $header .= 'realm=' . $this->config->getRealm() . '", ';
@@ -92,10 +91,10 @@ class OAuth1
     private function buildOauthSignature(string $url, array $params, string $method)
     {
         $base_string = $this->buildBaseString($method, $url, $params);
-        $key = rawurlencode($this->config->getConsumerSecret()) 
+        $key = rawurlencode($this->config->getConsumerSecret())
             . '&' . rawurlencode($this->config->getTokenSecret());
-        
-        $method = OAuth1Config::VALID_SIGNATURE_METHODS[$this->config->getOauthSignatureMethod()];
+
+        $method = OAuth1Config::HMAC_METHOD_MAP[$this->config->getOauthSignatureMethod()];
         $signature = base64_encode(hash_hmac($method, $base_string, $key, true));
 
         return $signature;
@@ -136,12 +135,12 @@ class OAuth1
     /////////////////////////////////
     ////// Getters and Setters /////
     ///////////////////////////////
-  
+
     /**
      * Get the value of config
      *
      * @return OAuth1Config
-     */ 
+     */
     public function getConfig()
     {
         return $this->config;
@@ -151,7 +150,7 @@ class OAuth1
      * Set the value of config
      *
      * @param OAuth1Config $config
-     */ 
+     */
     public function setConfig(OAuth1Config $config)
     {
         $this->config = $config;
@@ -166,7 +165,7 @@ class OAuth1
      * Best used for debugging.
      *
      * @return string
-     */ 
+     */
     public function getBaseString()
     {
         return $this->base_string;
@@ -177,7 +176,7 @@ class OAuth1
      * Best used for debugging.
      *
      * @return string
-     */ 
+     */
     public function getSignature()
     {
         return $this->signature;

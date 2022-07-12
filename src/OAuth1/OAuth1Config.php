@@ -5,7 +5,7 @@ namespace OAuth\OAuth1;
 use OAuth\Utils\OAuthException;
 
 /**
- * Config object for OAuth 1.0 requests. 
+ * Config object for OAuth 1.0 requests.
  * @author Dan Rogers
  */
 class OAuth1Config
@@ -56,18 +56,13 @@ class OAuth1Config
      * @var string
      * OAuth signature method.
      */
-    protected $oauth_signature_method = 'HMAC-SHA1';
-
-    const VALID_SIGNATURE_METHODS = [
-        'HMAC-SHA1' => 'sha1',
-        'HMAC-SHA256' => 'sha256',
-        'HMAC-SHA512' => 'sha512',
-    ];
+    protected $oauth_signature_method = self::HMAC_SHA1;
 
     /**
-     * @param array $oauth_params Associative array of parameters to be set. 
+     * @param array $oauth_params Associative array of parameters to be set.
      *              Acceptable params will be set while all others will be discarded.
-     * 
+     *              (Think of it as akin to Python's kwargs)
+     *
      * ```
      * // Valid params
      * $params = [
@@ -78,7 +73,7 @@ class OAuth1Config
      *     'oauth_token' => 'abc123',
      *     'token_secret' => 'xyz567',
      *     'oauth_verifier' => 'XXXXXXXXXXXXX',
-     *     'oauth_signature_method' => 'HMAC-SHA1',
+     *     'oauth_signature_method' => self::HMAC_SHA1,
      * ];
      * ```
      */
@@ -95,7 +90,7 @@ class OAuth1Config
 
     /**
      * Retrieve properties used in the header and signature.
-     * 
+     *
      * @return array
      */
     public function getHeaderParams()
@@ -114,11 +109,11 @@ class OAuth1Config
 
     /**
      * Get the name of a setter for the property.
-     * 
-     * Property naming convention is `snake_case`. 
-     * Method naming convention is `set + PascalisedPropertyName` which in 
+     *
+     * Property naming convention is `snake_case`.
+     * Method naming convention is `set + PascalisedPropertyName` which in
      * effect makes it `camelCase`.
-     * 
+     *
      * For example property `oauth_signature_method` becomes `setOauthSignature`.
      */
     private function getSetterName($property)
@@ -136,7 +131,7 @@ class OAuth1Config
      * Get the value of oauth_callback
      *
      * @return  string
-     */ 
+     */
     public function getOauthCallback()
     {
         return $this->oauth_callback;
@@ -146,7 +141,7 @@ class OAuth1Config
      * Set the value of oauth_callback
      *
      * @param string $oauth_callback
-     */ 
+     */
     public function setOauthCallback(string $oauth_callback)
     {
         $this->oauth_callback = $oauth_callback;
@@ -156,7 +151,7 @@ class OAuth1Config
      * Get the value of consumer_key
      *
      * @return  string
-     */ 
+     */
     public function getOauthConsumerKey()
     {
         return $this->oauth_consumer_key;
@@ -166,7 +161,7 @@ class OAuth1Config
      * Set the value of oauth_consumer_key
      *
      * @param string $oauth_consumer_key
-     */ 
+     */
     public function setOauthConsumerKey(string $oauth_consumer_key)
     {
         $this->oauth_consumer_key = $oauth_consumer_key;
@@ -176,7 +171,7 @@ class OAuth1Config
      * Get the value of consumer_secret
      *
      * @return  string
-     */ 
+     */
     public function getConsumerSecret()
     {
         return $this->consumer_secret;
@@ -186,7 +181,7 @@ class OAuth1Config
      * Set the value of consumer_secret
      *
      * @param string $consumer_secret
-     */ 
+     */
     public function setConsumerSecret(string $consumer_secret)
     {
         $this->consumer_secret = $consumer_secret;
@@ -196,7 +191,7 @@ class OAuth1Config
      * Get OAuth realm
      *
      * @return string
-     */ 
+     */
     public function getRealm()
     {
         return $this->realm;
@@ -206,7 +201,7 @@ class OAuth1Config
      * Set OAuth realm
      *
      * @param string $realm OAuth realm
-     */ 
+     */
     public function setRealm(string $realm)
     {
         $this->realm = $realm;
@@ -216,7 +211,7 @@ class OAuth1Config
      * Get OAuth Access token
      *
      * @return string
-     */ 
+     */
     public function getOauthToken()
     {
         return $this->oauth_token;
@@ -226,7 +221,7 @@ class OAuth1Config
      * Set OAuth Access token
      *
      * @param string $oauth_token OAuth Access token
-     */ 
+     */
     public function setOauthToken(string $oauth_token)
     {
         $this->oauth_token = $oauth_token;
@@ -236,7 +231,7 @@ class OAuth1Config
      * Get OAuth token secret.
      *
      * @return string
-     */ 
+     */
     public function getTokenSecret()
     {
         return $this->token_secret;
@@ -246,7 +241,7 @@ class OAuth1Config
      * Set OAuth token secret.
      *
      * @param string $token_secret OAuth token secret.
-     */ 
+     */
     public function setTokenSecret(string $token_secret)
     {
         $this->token_secret = $token_secret;
@@ -256,7 +251,7 @@ class OAuth1Config
      * Get OAuth verifier.
      *
      * @return string
-     */ 
+     */
     public function getOauthVerifier()
     {
         return $this->oauth_verifier;
@@ -266,7 +261,7 @@ class OAuth1Config
      * Set OAuth verifier.
      *
      * @param string $oauth_verifier OAuth verifier.
-     */ 
+     */
     public function setOauthVerifier(string $oauth_verifier)
     {
         $this->oauth_verifier = $oauth_verifier;
@@ -276,7 +271,7 @@ class OAuth1Config
      * Get OAuth signature method.
      *
      * @return string
-     */ 
+     */
     public function getOauthSignatureMethod()
     {
         return $this->oauth_signature_method;
@@ -287,14 +282,35 @@ class OAuth1Config
      *
      * @param string $oauth_signature_method  OAuth signature method.
      * @throws OAuthException
-     */ 
+     */
     public function setOauthSignatureMethod(string $oauth_signature_method)
     {
-        if (!in_array($oauth_signature_method, array_keys(self::VALID_SIGNATURE_METHODS))) {
-            $methods = implode(', ', array_keys(self::VALID_SIGNATURE_METHODS));
+        if (!in_array($oauth_signature_method, self::VALID_SIGNATURE_METHODS)) {
+            $methods = implode(', ', self::VALID_SIGNATURE_METHODS);
             throw new OAuthException("Currently supported signature methods are: $methods.");
         }
 
         $this->oauth_signature_method = $oauth_signature_method;
     }
+
+    /////////////////////////////////
+    /////////// Constants //////////
+    ///////////////////////////////
+
+    // Hmac constants
+    const HMAC_SHA1 = 'HMAC-SHA1';
+    const HMAC_SHA256 = 'HMAC-SHA256';
+    const HMAC_SHA512 = 'HMAC-SHA512';
+    const VALID_SIGNATURE_METHODS = [
+        self::HMAC_SHA1,
+        self::HMAC_SHA256,
+        self::HMAC_SHA512
+    ];
+
+    // Used to define the method which `hash_hmac()` should use to encode.
+    const HMAC_METHOD_MAP = [
+        self::HMAC_SHA1 => 'sha1',
+        self::HMAC_SHA256 => 'sha256',
+        self::HMAC_SHA512 => 'sha512',
+    ];
 }
