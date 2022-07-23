@@ -7,6 +7,5 @@ composer require dan-rogers/oauth-php
 ```
 
 ### Upcoming features
-- RSA as a signature method for OAuth 1.0
-- PLAINTEXT as a signature method for OAuth 1.0
 - OAuth 2.0
+- Potential to expand the library to include other types of authorization
