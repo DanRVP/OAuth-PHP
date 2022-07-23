@@ -52,18 +52,43 @@ class OAuth1
     {
         $oauth_params = $this->config->getHeaderParams();
         $request_params = array_merge($oauth_params, $extra_params);
-        $request_params['oauth_timestamp'] = OAuthHelper::getTimestamp();
-        $request_params['oauth_nonce'] = OAuthHelper::generateRandomString(20);
-        $request_params['oauth_signature'] = $this->buildOauthSignature();
+
+        // Determine which method we are signing with.
+        $signature_method = $this->config->getOauthSignatureMethod();
+        $signature_type = $this->determineSignatureMethodType($signature_method);
+
+        if ($signature_type !== OAuth1Config::PLAINTEXT) {
+            // These are not needed when using PLAINTEXT as the signature type.
+            $request_params['oauth_timestamp'] = OAuthHelper::getTimestamp();
+            $request_params['oauth_nonce'] = OAuthHelper::generateRandomString(20);
+        }
+
+        $request_params['oauth_signature'] = $this->buildOauthSignature(
+            $signature_type, 
+            $url, 
+            $method, 
+            $request_params
+        );
 
         return $this->buildOauthHeader($request_params);
     }
 
-    private function buildOauthSignature()
+    /**
+     * Build a valid OAuth signature based on the signature type.
+     * 
+     * @param string $signature_type The type of signature we use. 
+     * @param string $http_method HTTP method of the request.
+     * @param string $url Url of the request.
+     * @param array $params An array of parameters used to build the string.
+     * @return string A signature.
+     */
+    private function buildOauthSignature(
+        string $signature_type, 
+        string $url, 
+        string $method, 
+        array $params
+    ) 
     {
-        $signature_method = $this->config->getOauthSignatureMethod();
-        $signature_type = $this->determineSignatureMethodType($signature_method);
-
         // Probably an invalid signature type. 
         if (empty($signature_type)) {
             throw new OAuthException('Invalid signature type: ' . $signature_method);
@@ -77,9 +102,10 @@ class OAuth1
         } else if ($signature_type === OAuth1Config::RSA) {
             $signature = $this->rsaSignature($base_string);
         } else if ($signature_type === OAuth1Config::PLAINTEXT) {
-            // TODO add plaintext signature.
+            $signature = $this->generateSecretPair();
         }
 
+        $this->signature = $signature;
         return $signature;
     }
 
@@ -123,11 +149,7 @@ class OAuth1
         ksort($params);
 
         $param_string = "";
-        foreach ($params as $key => $value){
-            if (empty($value)) {
-                unset($params[$key]);
-            }
-
+        foreach ($params as $key => $value) {
             $param_string .= rawurlencode($key) . '='. rawurlencode($value) . '&';
         }
 
@@ -146,13 +168,9 @@ class OAuth1
      */
     private function hmacSignature(string $base_string)
     {
-        $key = rawurlencode($this->config->getConsumerSecret())
-            . '&' . rawurlencode($this->config->getTokenSecret());
-
+        $key = $this->generateSecretPair();
         $hmac_method = OAuth1Config::HMAC_METHOD_MAP[$this->config->getOauthSignatureMethod()];
-        $signature = base64_encode(hash_hmac($hmac_method, $base_string, $key, true));
-
-        return $signature;
+        return base64_encode(hash_hmac($hmac_method, $base_string, $key, true));
     }
 
     /**
@@ -163,11 +181,19 @@ class OAuth1
      */
     private function rsaSignature(string $base_string)
     {
-        // TODO: Allow users to 
         $signature = '';
-        $private_key = new RsaPrivateKey('', '');
+        $private_key = new RsaPrivateKey(
+            $this->config->rsa_private_key, 
+            $this->config->rsa_passphrase
+        );
+
         $rsa_method = OAuth1Config::RSA_METHOD_MAP[$this->config->getOauthSignatureMethod()];
-        $success = openssl_sign($data, $signature, $private_key->getPrivateKey(), $rsa_method)
+        $success = openssl_sign(
+            $data, 
+            $signature, 
+            $private_key->getPrivateKey(), 
+            $rsa_method
+        );
 
         if (!$success) {
             throw new OAuthException(openssl_error_string());
@@ -180,6 +206,7 @@ class OAuth1
      * Work out which method of signing the user wants to use.
      * 
      * @param string $method The signature method.
+     * @return string
      */
     private function determineSignatureMethodType($method)
     {
@@ -196,6 +223,18 @@ class OAuth1
         }
 
         return '';
+    }
+
+    /**
+     * Get the rawurlendcode, concatenated consumer and token
+     * secret for HMAC and PLAINTEXT signature types.
+     * 
+     * @return string
+     */
+    private function generateSecretPair()
+    {
+        return rawurlencode($this->config->getConsumerSecret())
+            . '&' . rawurlencode($this->config->getTokenSecret());
     }
 
     /////////////////////////////////

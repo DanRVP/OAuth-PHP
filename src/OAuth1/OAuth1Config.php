@@ -59,6 +59,20 @@ class OAuth1Config
     protected $oauth_signature_method = self::HMAC_SHA1;
 
     /**
+     * @var string
+     * (Optional: Populate if using RSA for signing. Discarded if using another signature type.)
+     * Passphrase for the RSA private key.
+     */
+    protected $rsa_private_key = '';
+
+    /**
+     * @var string
+     * (Optional: Populate if using RSA for signing. Discarded if using another signature type.)
+     * Passphrase for the RSA private key.
+     */
+    protected $rsa_passphrase = '';
+
+    /**
      * @param array $oauth_params Associative array of parameters to be set.
      *              Acceptable params will be set while all others will be discarded.
      *              (Think of it as akin to Python's kwargs)
@@ -74,6 +88,8 @@ class OAuth1Config
      *     'token_secret' => 'xyz567',
      *     'oauth_verifier' => 'XXXXXXXXXXXXX',
      *     'oauth_signature_method' => self::HMAC_SHA1,
+     *     'rsa_private_key' => 'file://path/to/file.pem',
+     *     'rsa_passphrase' => 'MyPassphrase123',
      * ];
      * ```
      */
@@ -291,6 +307,46 @@ class OAuth1Config
         }
 
         $this->oauth_signature_method = $oauth_signature_method;
+    }
+
+    /**
+     * Get RSA private key.
+     *
+     * @return string
+     */
+    public function getRsaPrivateKey()
+    {
+        return $this->rsa_private_key;
+    }
+
+    /**
+     * Set RSA private key.
+     *
+     * @param string $rsa_private_key RSA private key.
+     */
+    public function setRsaPrivateKey(string $rsa_private_key)
+    {
+        $this->rsa_private_key = $rsa_private_key;
+    }
+
+    /**
+     * Get RSA private key passphrase.
+     *
+     * @return string
+     */
+    public function getRsaPassphrase()
+    {
+        return $this->rsa_passphrase;
+    }
+
+    /**
+     * Set RSA private key passphrase.
+     *
+     * @param string $rsa_private_key RSA private key.
+     */
+    public function setRsaPassphrase(string $rsa_passphrase)
+    {
+        $this->rsa_passphrase = $rsa_passphrase;
     }
 
     /////////////////////////////////
