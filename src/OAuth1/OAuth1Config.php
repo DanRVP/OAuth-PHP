@@ -297,20 +297,42 @@ class OAuth1Config
     /////////// Constants //////////
     ///////////////////////////////
 
-    // Hmac constants
+    // HMAC constants
     const HMAC_SHA1 = 'HMAC-SHA1';
     const HMAC_SHA256 = 'HMAC-SHA256';
     const HMAC_SHA512 = 'HMAC-SHA512';
-    const VALID_SIGNATURE_METHODS = [
-        self::HMAC_SHA1,
-        self::HMAC_SHA256,
-        self::HMAC_SHA512
-    ];
 
     // Used to define the method which `hash_hmac()` should use to encode.
     const HMAC_METHOD_MAP = [
         self::HMAC_SHA1 => 'sha1',
         self::HMAC_SHA256 => 'sha256',
         self::HMAC_SHA512 => 'sha512',
+    ];
+
+    // RSA constants
+    const RSA_SHA1 = 'RSA-SHA1';
+    const RSA_SHA256 = 'RSA-SHA256';
+    const RSA_SHA512 = 'RSA-SHA512';
+
+    // Used to define the method which `openssl_sign()` should use to encode.
+    const RSA_METHOD_MAP = [
+        self::RSA_SHA1 => OPENSSL_ALGO_SHA1,
+        self::RSA_SHA256 => OPENSSL_ALGO_SHA256,
+        self::RSA_SHA512 => OPENSSL_ALGO_SHA512,
+    ];
+
+    // All types
+    const HMAC = 'HMAC';
+    const RSA = 'RSA';
+    const PLAINTEXT = 'PLAINTEXT';
+
+    // Signature methods that will be accepted.
+    const VALID_SIGNATURE_METHODS = [
+        self::HMAC_SHA1,
+        self::HMAC_SHA256,
+        self::HMAC_SHA512
+        self::RSA_SHA1,
+        self::RSA_SHA256,
+        self::RSA_SHA512
     ];
 }
