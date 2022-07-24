@@ -4,12 +4,13 @@ namespace OAuth\OAuth1;
 
 use OAuth\Utils\OAuthHelper;
 use OAuth\Utils\RsaPrivateKey;
+use OAuth\OAuth;
 
 /**
  * Main class which handles OAuth 1.0 logic
  * @author Dan Rogers
  */
-class OAuth1
+class OAuth1 extends OAuth
 {
     /**
      * @var OAuth1Config
@@ -29,14 +30,6 @@ class OAuth1
      * Read-only for debugging.
      */
     protected $signature;
-
-    /**
-     * @param OAuth1Config $config
-     */
-    public function __construct(OAuth1Config $config)
-    {
-        $this->setConfig($config);
-    }
 
     /**
      * Generate an OAuth 1.0 Authorization header string based on the current
@@ -199,7 +192,7 @@ class OAuth1
             throw new OAuthException(openssl_error_string());
         }
 
-        return $signature
+        return $signature;
     }
 
     /**
@@ -248,7 +241,7 @@ class OAuth1
      */
     public function getConfig()
     {
-        return $this->config;
+        parent::getConfig();
     }
 
     /**
@@ -258,7 +251,7 @@ class OAuth1
      */
     public function setConfig(OAuth1Config $config)
     {
-        $this->config = $config;
+        parent::setConfig($config);
     }
 
     /////////////////////////////////

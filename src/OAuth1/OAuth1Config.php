@@ -3,12 +3,13 @@
 namespace OAuth\OAuth1;
 
 use OAuth\Utils\OAuthException;
+use OAuth\OAuthConfig;
 
 /**
  * Config object for OAuth 1.0 requests.
  * @author Dan Rogers
  */
-class OAuth1Config
+class OAuth1Config extends OAuthConfig
 {
     /**
      * @var string
@@ -95,13 +96,8 @@ class OAuth1Config
      */
     public function __construct(array $oauth_params)
     {
-        $valid_parameters = array_keys(get_object_vars($this));
-        foreach ($oauth_params as $key => $value) {
-            if (in_array($key, $valid_parameters)) {
-                $setter_name = $this->getSetterName($key);
-                $this->$setter_name($value);
-            }
-        }
+        // Call parent so our docblock is for OAuth 1.0 specifically.
+        parent::__construct();
     }
 
     /**
@@ -121,22 +117,6 @@ class OAuth1Config
 
         // Remove empty fields
         return array_filter($params);
-    }
-
-    /**
-     * Get the name of a setter for the property.
-     *
-     * Property naming convention is `snake_case`.
-     * Method naming convention is `set + PascalisedPropertyName` which in
-     * effect makes it `camelCase`.
-     *
-     * For example property `oauth_signature_method` becomes `setOauthSignature`.
-     */
-    private function getSetterName($property)
-    {
-        $parts = explode('_', $property);
-        $pascalised = array_map('ucfirst', $parts);
-        return 'set' . implode('', $pascalised);
     }
 
     /////////////////////////////////
@@ -386,7 +366,7 @@ class OAuth1Config
     const VALID_SIGNATURE_METHODS = [
         self::HMAC_SHA1,
         self::HMAC_SHA256,
-        self::HMAC_SHA512
+        self::HMAC_SHA512,
         self::RSA_SHA1,
         self::RSA_SHA256,
         self::RSA_SHA512
