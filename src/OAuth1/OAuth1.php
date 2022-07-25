@@ -5,6 +5,7 @@ namespace OAuth\OAuth1;
 use OAuth\Utils\OAuthHelper;
 use OAuth\Utils\RsaPrivateKey;
 use OAuth\OAuth;
+use OAuth\Utils\OAuthException;
 
 /**
  * Main class which handles OAuth 1.0 logic
@@ -43,8 +44,7 @@ class OAuth1 extends OAuth
      */
     public function generateAuthorization(string $url, string $method, array $extra_params = [])
     {
-        $oauth_params = $this->config->getHeaderParams();
-        $request_params = array_merge($oauth_params, $extra_params);
+        $request_params = $this->config->getHeaderParams();
 
         // Determine which method we are signing with.
         $signature_method = $this->config->getOauthSignatureMethod();
@@ -57,10 +57,10 @@ class OAuth1 extends OAuth
         }
 
         $request_params['oauth_signature'] = $this->buildOauthSignature(
-            $signature_type, 
-            $url, 
-            $method, 
-            $request_params
+            $signature_type,
+            $url,
+            $method,
+            array_merge($request_params, $extra_params)
         );
 
         return $this->buildOauthHeader($request_params);
@@ -68,23 +68,23 @@ class OAuth1 extends OAuth
 
     /**
      * Build a valid OAuth signature based on the signature type.
-     * 
-     * @param string $signature_type The type of signature we use. 
+     *
+     * @param string $signature_type The type of signature we use.
      * @param string $http_method HTTP method of the request.
      * @param string $url Url of the request.
      * @param array $params An array of parameters used to build the string.
      * @return string A signature.
      */
     private function buildOauthSignature(
-        string $signature_type, 
-        string $url, 
-        string $method, 
+        string $signature_type,
+        string $url,
+        string $method,
         array $params
-    ) 
+    )
     {
-        // Probably an invalid signature type. 
+        // Probably an invalid signature type.
         if (empty($signature_type)) {
-            throw new OAuthException('Invalid signature type: ' . $signature_method);
+            throw new OAuthException('Invalid signature type: ' . $signature_type);
         }
 
         $base_string = $this->buildBaseString($method, $url, $params);
@@ -168,7 +168,7 @@ class OAuth1 extends OAuth
 
     /**
      * Generates a RSA-SHA OAuth signature string.
-     * 
+     *
      * @param string $base_string The OAuth base string
      * @return string The signature.
      */
@@ -176,15 +176,15 @@ class OAuth1 extends OAuth
     {
         $signature = '';
         $private_key = new RsaPrivateKey(
-            $this->config->rsa_private_key, 
+            $this->config->rsa_private_key,
             $this->config->rsa_passphrase
         );
 
         $rsa_method = OAuth1Config::RSA_METHOD_MAP[$this->config->getOauthSignatureMethod()];
         $success = openssl_sign(
-            $data, 
-            $signature, 
-            $private_key->getPrivateKey(), 
+            $base_string,
+            $signature,
+            $private_key->getPrivateKey(),
             $rsa_method
         );
 
@@ -197,14 +197,14 @@ class OAuth1 extends OAuth
 
     /**
      * Work out which method of signing the user wants to use.
-     * 
+     *
      * @param string $method The signature method.
      * @return string
      */
     private function determineSignatureMethodType($method)
     {
         if (in_array($method, OAuth1Config::HMAC_METHOD_MAP)) {
-            return OAuth1Config::HMAC;  
+            return OAuth1Config::HMAC;
         }
 
         if (in_array($method, OAuth1Config::RSA_METHOD_MAP)) {
@@ -221,7 +221,7 @@ class OAuth1 extends OAuth
     /**
      * Get the rawurlendcode, concatenated consumer and token
      * secret for HMAC and PLAINTEXT signature types.
-     * 
+     *
      * @return string
      */
     private function generateSecretPair()
@@ -249,8 +249,12 @@ class OAuth1 extends OAuth
      *
      * @param OAuth1Config $config
      */
-    public function setConfig(OAuth1Config $config)
+    public function setConfig($config)
     {
+        if (!($config instanceof OAuth1Config)) {
+            throw new OAuthException('Config type must be of OAuth1Config.');
+        }
+
         parent::setConfig($config);
     }
 

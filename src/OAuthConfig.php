@@ -4,7 +4,7 @@ namespace OAuth;
 
 use OAuth\Utils\OAuthException;
 
-class OAuth1Config
+class OAuthConfig
 {
     /**
      * @param array $oauth_params Associative array of parameters to be set.
@@ -12,7 +12,7 @@ class OAuth1Config
      *              (Think of it as akin to Python's kwargs)
      * @throws OAuthException Setters can throw OAuth exceptions.
      */
-    public function __construct(array $oauth_params)
+    public function __construct(array $oauth_params = [])
     {
         $valid_parameters = array_keys(get_object_vars($this));
         foreach ($oauth_params as $key => $value) {
@@ -30,7 +30,7 @@ class OAuth1Config
      * Method naming convention is `set + PascalisedPropertyName` which in
      * effect makes it `camelCase`.
      *
-     * For example property `oauth_signature_method` becomes `setOauthSignature`.
+     * For example property `oauth_signature_method` becomes `setOauthSignatureMethod`.
      */
     private function getSetterName($property)
     {

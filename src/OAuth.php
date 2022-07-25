@@ -2,6 +2,8 @@
 
 namespace OAuth;
 
+use OAuth\Utils\OAuthException;
+
 class OAuth
 {
     /**
@@ -33,6 +35,10 @@ class OAuth
      */
     public function setConfig($config)
     {
+        if (!($config instanceof OAuthConfig)) {
+            throw new OAuthException('Invalid config type.');
+        }
+
         $this->config = $config;
     }
 }

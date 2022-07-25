@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace OAuth\Utils;
 
@@ -12,7 +12,7 @@ class RsaPrivateKey
      * @var string
      */
     protected $key;
-    
+
     /**
      * @var string
      */
@@ -26,8 +26,8 @@ class RsaPrivateKey
 
     /**
      * Get a OpenSSLAsymmetricKey based on the current key and passphrase.
-     * 
-     * @return OpenSSLAsymmetricKey
+     *
+     * @return \OpenSSLAsymmetricKey
      */
     public function getPrivateKey()
     {

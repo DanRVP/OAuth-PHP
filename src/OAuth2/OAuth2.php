@@ -3,6 +3,7 @@
 namespace OAuth\OAuth2;
 
 use OAuth\OAuth;
+use OAuth\Utils\OAuthException;
 
 /**
  * Main class which handles OAuth 2.0 logic
@@ -34,8 +35,12 @@ class OAuth2 extends OAuth
      *
      * @param OAuth2Config $config
      */
-    public function setConfig(OAuth2Config $config)
+    public function setConfig($config)
     {
+        if (!($config instanceof OAuth2Config)) {
+            throw new OAuthException('Config type must be of OAuth2Config.');
+        }
+
         parent::setConfig($config);
     }
 }

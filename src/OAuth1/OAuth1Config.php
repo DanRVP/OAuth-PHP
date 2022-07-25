@@ -97,7 +97,7 @@ class OAuth1Config extends OAuthConfig
     public function __construct(array $oauth_params)
     {
         // Call parent so our docblock is for OAuth 1.0 specifically.
-        parent::__construct();
+        parent::__construct($oauth_params);
     }
 
     /**
