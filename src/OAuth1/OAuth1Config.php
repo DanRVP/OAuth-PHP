@@ -113,6 +113,7 @@ class OAuth1Config extends OAuthConfig
             'oauth_token' => $this->getOauthToken(),
             'oauth_verifier' => $this->getOauthVerifier(),
             'oauth_signature_method' => $this->getOauthSignatureMethod(),
+            'oauth_version' => '1.0',
         ];
 
         // Remove empty fields

@@ -114,7 +114,7 @@ class OAuth1 extends OAuth
 
         $realm = $this->config->getRealm();
         if (!empty($realm)) {
-            $header .= 'realm=' . $this->config->getRealm() . '", ';
+            $header .= 'realm="' . $this->config->getRealm() . '", ';
         }
 
         foreach ($params as $key => $value) {
@@ -203,11 +203,11 @@ class OAuth1 extends OAuth
      */
     private function determineSignatureMethodType($method)
     {
-        if (in_array($method, OAuth1Config::HMAC_METHOD_MAP)) {
+        if (in_array($method, array_keys(OAuth1Config::HMAC_METHOD_MAP))) {
             return OAuth1Config::HMAC;
         }
 
-        if (in_array($method, OAuth1Config::RSA_METHOD_MAP)) {
+        if (in_array($method, array_keys(OAuth1Config::RSA_METHOD_MAP))) {
             return OAuth1Config::RSA;
         }
 
