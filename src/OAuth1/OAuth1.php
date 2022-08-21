@@ -11,7 +11,7 @@ use OAuth\Utils\OAuthException;
  * Main class which handles OAuth 1.0 logic
  * @author Dan Rogers
  */
-class OAuth1 extends OAuth
+class OAuth1
 {
     /**
      * @var OAuth1Config
@@ -31,6 +31,14 @@ class OAuth1 extends OAuth
      * Read-only for debugging.
      */
     protected $signature;
+
+    /**
+     * @param OAuthConfig $config
+     */
+    public function __construct($config)
+    {
+        $this->setConfig($config);
+    }
 
     /**
      * Generate an OAuth 1.0 Authorization header string based on the current
@@ -237,17 +245,17 @@ class OAuth1 extends OAuth
     /**
      * Get the value of config
      *
-     * @return OAuth1Config
+     * @return OAuthConfig
      */
     public function getConfig()
     {
-        parent::getConfig();
+        return $this->config;
     }
 
     /**
      * Set the value of config
      *
-     * @param OAuth1Config $config
+     * @param OAuthConfig $config
      */
     public function setConfig($config)
     {
@@ -255,7 +263,7 @@ class OAuth1 extends OAuth
             throw new OAuthException('Config type must be of OAuth1Config.');
         }
 
-        parent::setConfig($config);
+        $this->config = $config;
     }
 
     /////////////////////////////////

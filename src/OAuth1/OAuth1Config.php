@@ -3,13 +3,12 @@
 namespace OAuth\OAuth1;
 
 use OAuth\Utils\OAuthException;
-use OAuth\OAuthConfig;
 
 /**
  * Config object for OAuth 1.0 requests.
  * @author Dan Rogers
  */
-class OAuth1Config extends OAuthConfig
+class OAuth1Config
 {
     /**
      * @var string
@@ -78,6 +77,8 @@ class OAuth1Config extends OAuthConfig
      *              Acceptable params will be set while all others will be discarded.
      *              (Think of it as akin to Python's kwargs)
      *
+     * @throws OAuthException Setters can throw OAuth exceptions.
+     *
      * ```
      * // Valid params
      * $params = [
@@ -94,10 +95,31 @@ class OAuth1Config extends OAuthConfig
      * ];
      * ```
      */
-    public function __construct(array $oauth_params)
+    public function __construct(array $oauth_params = [])
     {
-        // Call parent so our docblock is for OAuth 1.0 specifically.
-        parent::__construct($oauth_params);
+        $valid_parameters = array_keys(get_object_vars($this));
+        foreach ($oauth_params as $key => $value) {
+            if (in_array($key, $valid_parameters)) {
+                $setter_name = $this->getSetterName($key);
+                $this->$setter_name($value);
+            }
+        }
+    }
+
+    /**
+     * Get the name of a setter for the property.
+     *
+     * Property naming convention is `snake_case`.
+     * Method naming convention is `set + PascalisedPropertyName` which in
+     * effect makes it `camelCase`.
+     *
+     * For example property `oauth_signature_method` becomes `setOauthSignatureMethod`.
+     */
+    private function getSetterName($property)
+    {
+        $parts = explode('_', $property);
+        $pascalised = array_map('ucfirst', $parts);
+        return 'set' . implode('', $pascalised);
     }
 
     /**

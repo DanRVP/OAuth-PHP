@@ -2,45 +2,65 @@
 
 namespace OAuth\OAuth2;
 
-use OAuth\OAuth;
 use OAuth\Utils\OAuthException;
 
 /**
- * Main class which handles OAuth 2.0 logic
+ * Contains helper methods for building OAuth 2.0 requests
  * @author Dan Rogers
  */
-class OAuth2 extends OAuth
+class OAuth2
 {
     /**
-     * @var OAuth2Config
+     * @var string
      */
-    protected $config;
-
-    /////////////////////////////////
-    ////// Getters and Setters /////
-    ///////////////////////////////
+    protected $last_state;
 
     /**
-     * Get the value of config
-     *
-     * @return OAuth2Config
+     * @var string
      */
-    public function getConfig()
+    protected $last_redirect;
+
+    /**
+     * Check that the state that has been returned is equal to the state sent.
+     *
+     * @param string $state
+     * @return bool
+     */
+    public function verifyState($state)
     {
-        parent::getConfig();
+        return $state == $this->last_state;
     }
 
     /**
-     * Set the value of config
+     * Get a constant from the current class.
      *
-     * @param OAuth2Config $config
+     * @param string $constant_name
      */
-    public function setConfig($config)
+    protected function getConstant($constant_name)
     {
-        if (!($config instanceof OAuth2Config)) {
-            throw new OAuthException('Config type must be of OAuth2Config.');
+        $class_name = get_class($this);
+        return constant("$class_name::$constant_name");
+    }
+
+    /**
+     * Check that fields exist in an array and that they are no empty.
+     * Throws an OAuthException with a list of invalid fields on failure.
+     *
+     * @param array $params
+     * @throws OAuthException
+     */
+    protected function checkRequiredFields($params)
+    {
+        $invalid = [];
+        foreach ($this->getConstant('REQUIRED_FIELDS') as $field) {
+            if (empty($params[$field])) {
+                $invalid[] = $field;
+            }
         }
 
-        parent::setConfig($config);
+        if (!empty($invalid)) {
+            $key_list = implode(', ', $invalid);
+            throw new OAuthException("The following keys are required and cannot be empty: $key_list");
+        }
     }
 }
