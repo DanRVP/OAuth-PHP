@@ -1,5 +1,5 @@
 # OAuth-PHP
-Library for OAuth 1 and OAuth 2 workflows.
+A PHP Library for OAuth 1 and OAuth 2 workflows.
 
 ### Installation
 ```
