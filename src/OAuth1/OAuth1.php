@@ -82,12 +82,7 @@ class OAuth1
      * @param array $params An array of parameters used to build the string.
      * @return string A signature.
      */
-    private function buildOauthSignature(
-        string $signature_type,
-        string $url,
-        string $method,
-        array $params
-    )
+    private function buildOauthSignature($signature_type, $url, $method, array $params)
     {
         // Probably an invalid signature type.
         if (empty($signature_type)) {

@@ -48,7 +48,7 @@ class RsaPrivateKey
     /**
      * Set the value of $key.
      */
-    public function setKey(string $key)
+    public function setKey($key)
     {
         $this->key = $key;
     }
