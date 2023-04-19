@@ -18,7 +18,7 @@ class RsaPrivateKey
      */
     protected $passphrase;
 
-    public function __construct(string $key, string $passphrase = null)
+    public function __construct($key, $passphrase = null)
     {
         $this->setKey($key);
         $this->setPassphrase($passphrase);
@@ -64,7 +64,7 @@ class RsaPrivateKey
     /**
      * Set the value of $passphrase.
      */
-    public function setPassphrase(string $passphrase)
+    public function setPassphrase($passphrase)
     {
         $this->passphrase = $passphrase;
     }

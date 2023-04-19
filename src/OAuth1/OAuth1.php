@@ -4,7 +4,6 @@ namespace OAuth\OAuth1;
 
 use OAuth\Utils\OAuthHelper;
 use OAuth\Utils\RsaPrivateKey;
-use OAuth\OAuth;
 use OAuth\Utils\OAuthException;
 
 /**
@@ -50,7 +49,7 @@ class OAuth1
      *              request. These should only be included if they are part
      *              of any x-www-form-urlencoded data in the request.
      */
-    public function generateAuthorization(string $url, string $method, array $extra_params = [])
+    public function generateAuthorization($url, $method, array $extra_params = [])
     {
         $request_params = $this->config->getHeaderParams();
 
@@ -116,7 +115,7 @@ class OAuth1
      * @param array $params Array of parameters used to create signature.
      * @return string The OAuth header
      */
-    private function buildOauthHeader(array $params)
+    private function buildOauthHeader($params)
     {
         $header = 'OAuth ';
 
@@ -141,7 +140,8 @@ class OAuth1
      * @param array $params An array of parameters used to build the string.
      * @return string A base string to be used in OAuth signature generation.
      */
-    private function buildBaseString(string $http_method, string $url, array $params){
+    private function buildBaseString($http_method, $url, array $params)
+    {
         //http method must be upper case
         $base_string = strtoupper($http_method) . '&';
         $base_string .= rawurlencode($url) . '&';
@@ -167,7 +167,7 @@ class OAuth1
      * @param string $base_string The OAuth base string
      * @return string The signature.
      */
-    private function hmacSignature(string $base_string)
+    private function hmacSignature($base_string)
     {
         $key = $this->generateSecretPair();
         $hmac_method = OAuth1Config::HMAC_METHOD_MAP[$this->config->getOauthSignatureMethod()];
@@ -180,12 +180,12 @@ class OAuth1
      * @param string $base_string The OAuth base string
      * @return string The signature.
      */
-    private function rsaSignature(string $base_string)
+    private function rsaSignature($base_string)
     {
         $signature = '';
         $private_key = new RsaPrivateKey(
-            $this->config->rsa_private_key,
-            $this->config->rsa_passphrase
+            $this->config->getRsaPrivateKey(),
+            $this->config->getRsaPassphrase()
         );
 
         $rsa_method = OAuth1Config::RSA_METHOD_MAP[$this->config->getOauthSignatureMethod()];

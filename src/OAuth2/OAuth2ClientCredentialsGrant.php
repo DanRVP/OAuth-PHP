@@ -14,7 +14,7 @@ class OAuth2PasswordCredentialsGrant extends OAuth2
      * @param string $scope
      * @return string
      */
-    public function getAccessTokenRequest(string $scope)
+    public function getAccessTokenRequest($scope)
     {
         $params = [
             'grant_type' => self::GRANT_TYPE,

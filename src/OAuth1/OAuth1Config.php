@@ -161,7 +161,7 @@ class OAuth1Config
      *
      * @param string $oauth_callback
      */
-    public function setOauthCallback(string $oauth_callback)
+    public function setOauthCallback($oauth_callback)
     {
         $this->oauth_callback = $oauth_callback;
     }
@@ -181,7 +181,7 @@ class OAuth1Config
      *
      * @param string $oauth_consumer_key
      */
-    public function setOauthConsumerKey(string $oauth_consumer_key)
+    public function setOauthConsumerKey($oauth_consumer_key)
     {
         $this->oauth_consumer_key = $oauth_consumer_key;
     }
@@ -201,7 +201,7 @@ class OAuth1Config
      *
      * @param string $consumer_secret
      */
-    public function setConsumerSecret(string $consumer_secret)
+    public function setConsumerSecret($consumer_secret)
     {
         $this->consumer_secret = $consumer_secret;
     }
@@ -221,7 +221,7 @@ class OAuth1Config
      *
      * @param string $realm OAuth realm
      */
-    public function setRealm(string $realm)
+    public function setRealm($realm)
     {
         $this->realm = $realm;
     }
@@ -241,7 +241,7 @@ class OAuth1Config
      *
      * @param string $oauth_token OAuth Access token
      */
-    public function setOauthToken(string $oauth_token)
+    public function setOauthToken($oauth_token)
     {
         $this->oauth_token = $oauth_token;
     }
@@ -261,7 +261,7 @@ class OAuth1Config
      *
      * @param string $token_secret OAuth token secret.
      */
-    public function setTokenSecret(string $token_secret)
+    public function setTokenSecret($token_secret)
     {
         $this->token_secret = $token_secret;
     }
@@ -281,7 +281,7 @@ class OAuth1Config
      *
      * @param string $oauth_verifier OAuth verifier.
      */
-    public function setOauthVerifier(string $oauth_verifier)
+    public function setOauthVerifier($oauth_verifier)
     {
         $this->oauth_verifier = $oauth_verifier;
     }
@@ -302,7 +302,7 @@ class OAuth1Config
      * @param string $oauth_signature_method  OAuth signature method.
      * @throws OAuthException
      */
-    public function setOauthSignatureMethod(string $oauth_signature_method)
+    public function setOauthSignatureMethod($oauth_signature_method)
     {
         if (!in_array($oauth_signature_method, self::VALID_SIGNATURE_METHODS)) {
             $methods = implode(', ', self::VALID_SIGNATURE_METHODS);
@@ -327,7 +327,7 @@ class OAuth1Config
      *
      * @param string $rsa_private_key RSA private key.
      */
-    public function setRsaPrivateKey(string $rsa_private_key)
+    public function setRsaPrivateKey($rsa_private_key)
     {
         $this->rsa_private_key = $rsa_private_key;
     }
@@ -347,7 +347,7 @@ class OAuth1Config
      *
      * @param string $rsa_private_key RSA private key.
      */
-    public function setRsaPassphrase(string $rsa_passphrase)
+    public function setRsaPassphrase($rsa_passphrase)
     {
         $this->rsa_passphrase = $rsa_passphrase;
     }

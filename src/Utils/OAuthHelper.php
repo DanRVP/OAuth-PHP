@@ -12,7 +12,7 @@ class OAuthHelper
 {
     /**
      * Get the current Unix timestamp.
-     * 
+     *
      * @return int
      */
     public static function getTimestamp()
@@ -23,11 +23,11 @@ class OAuthHelper
 
     /**
      * Generate a random string of a specified length.
-     * 
+     *
      * @param int $length
      * @return string
      */
-    public static function generateRandomString(int $length)
+    public static function generateRandomString($length)
     {
         return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
     }
